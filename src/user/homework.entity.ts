@@ -10,7 +10,7 @@ export enum HomeworkStatus {
 @Entity()
 export class Homework {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id?: string;
 
   @Column({
     type: 'enum',

@@ -19,7 +19,7 @@ export const getUserById = async (id: number, userService: UsersService) => {
   }
 };
 
-export const createUser  = async (userData: User, userService: UsersService) => {
+export const createUser = async (userData: User, userService: UsersService) => {
   try {
     return await userService.create(userData);
   } catch (error) {

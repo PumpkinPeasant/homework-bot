@@ -11,6 +11,7 @@ import * as console from 'node:console';
 import { UsersService } from '../user/user.service';
 import { hydrate } from '@grammyjs/hydrate';
 import { start } from './commands';
+import { getAllUsers, getUserById } from './controllers';
 
 @Injectable()
 export class BotService implements OnModuleInit {
@@ -79,18 +80,10 @@ export class BotService implements OnModuleInit {
 
     // this.bot.on('message', (ctx) => openMenu(ctx));
 
-    const fetchStudents = async (ctx: Context) => {
-      try {
-        return await this.usersService.findAll();
-      } catch (error) {
-        console.error(`Error while fetching users:`, error);
-        await ctx.reply(`Something went wrong... Try again`);
-      }
-    };
-
     this.bot.callbackQuery('show-students', async (ctx) => {
-
-      const users = await fetchStudents(ctx);
+      const users = await getAllUsers(this.usersService).catch(async () => {
+        await ctx.reply(`Something went wrong... Try again`);
+      });
 
       if (!users) {
         await ctx.editMessageText(`You don't have any students yet...`, {
@@ -112,7 +105,9 @@ export class BotService implements OnModuleInit {
     });
 
     this.bot.callbackQuery('add', async (ctx) => {
-      const users = await fetchStudents(ctx);
+      const users = await getAllUsers(this.usersService).catch(async () => {
+        await ctx.reply(`Something went wrong... Try again`);
+      });
 
       if (!users) {
         await ctx.editMessageText(`There is no one to assign homework for...`, {

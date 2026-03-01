@@ -19,6 +19,9 @@ export class Homework {
   })
   status?: HomeworkStatus;
 
+  @Column()
+  description: string;
+
   @ManyToOne(() => User, (user) => user.homeworks)
   user: User;
 

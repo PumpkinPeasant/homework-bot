@@ -91,19 +91,19 @@ export class BotService implements OnModuleInit {
         .row()
         .text('⬅️ Back', 'go-back');
 
-      const students = [1]
+      const students = [1];
 
-      if(!students.length) {
+      if (!students.length) {
         await ctx.editMessageText(`You don't have any students yet...`, {
-          reply_markup: backKeyboard
+          reply_markup: backKeyboard,
         });
       } else {
         await ctx.editMessageText(`Select your student to assign homework`, {
-          reply_markup: showStudentsKeyboard
+          reply_markup: showStudentsKeyboard,
         });
       }
 
-      await ctx.answerCallbackQuery()
+      await ctx.answerCallbackQuery();
     });
 
 
@@ -119,15 +119,15 @@ export class BotService implements OnModuleInit {
         .row()
         .text('⬅️ Back', 'go-back');
 
-      const students = [1]
+      const students = [1];
 
-      if(!students.length) {
+      if (!students.length) {
         await ctx.editMessageText(`There is no one to assign homework for...`, {
-          reply_markup: backKeyboard
+          reply_markup: backKeyboard,
         });
       } else {
         await ctx.editMessageText(`Select your student to assign homework`, {
-          reply_markup: showStudentsKeyboard
+          reply_markup: showStudentsKeyboard,
         });
       }
 
@@ -136,7 +136,7 @@ export class BotService implements OnModuleInit {
 
     this.bot.callbackQuery('review', async (ctx) => {
       await ctx.editMessageText(`There is nothing to review yet...`, {
-        reply_markup: backKeyboard
+        reply_markup: backKeyboard,
       });
 
       await ctx.answerCallbackQuery();
@@ -149,7 +149,7 @@ export class BotService implements OnModuleInit {
         reply_markup: teachersKeyboard,
       });
 
-      await ctx.answerCallbackQuery()
+      await ctx.answerCallbackQuery();
     });
 
     this.bot.catch((error) => {

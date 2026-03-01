@@ -1,11 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, OneToMany } from 'typeorm';
+import { Homework } from './homework.entity';
+
+export enum UserRole {
+  TEACHER,
+  STUDENT,
+}
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
+  @PrimaryColumn()
   telegramId: number;
 
   @Column()
@@ -16,9 +19,17 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: ['TEACHER', 'STUDENT'],
+    enum: UserRole,
+    default: UserRole.STUDENT,
   })
   role: UserRole;
-}
 
-export type UserRole = 'TEACHER' | 'STUDENT';
+  @OneToMany(() => Homework, (homework) => homework.user)
+  homeworks?: Homework[];
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdAt?: Date;
+}

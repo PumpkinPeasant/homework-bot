@@ -10,7 +10,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  public async create(user: User): Promise<User> {
+  public async create(user: Partial<User>): Promise<User> {
     return await this.usersRepository.save(user);
   }
 
@@ -19,13 +19,13 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<User | null> {
-    return await this.usersRepository.findOneBy({ id });
+    return await this.usersRepository.findOneBy({ telegramId: id });
   }
 
   async update(id: number, user: User): Promise<User> {
     const entity = await this.usersRepository.preload({
       ...user,
-      id,
+      telegramId: id,
     });
 
     if (!entity) {

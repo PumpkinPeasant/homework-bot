@@ -1,15 +1,14 @@
 import 'dotenv/config';
-import { Bot, GrammyError, HttpError, InlineKeyboard, Keyboard } from 'grammy';
+import { Bot, GrammyError, HttpError, InlineKeyboard } from 'grammy';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as console from 'node:console';
 import { UsersService } from '../user/user.service';
-import { User } from '../user/user.entity';
+import { User, UserRole } from '../user/user.entity';
 import { hydrate } from '@grammyjs/hydrate';
 
 @Injectable()
 export class BotService implements OnModuleInit {
-  constructor(private usersService: UsersService) {
-  }
+  constructor(private usersService: UsersService) {}
 
   bot = new Bot(process.env.BOT_TOKEN!);
 
@@ -20,10 +19,12 @@ export class BotService implements OnModuleInit {
 
     await this.bot.api.setMyCommands([
       {
-        command: 'start', description: 'Start the Bot',
+        command: 'start',
+        description: 'Start the Bot',
       },
       {
-        command: 'menu', description: 'Opens the menu',
+        command: 'menu',
+        description: 'Opens the menu',
       },
     ]);
 
@@ -37,11 +38,10 @@ export class BotService implements OnModuleInit {
       const name = ctx.from?.first_name ?? 'friend';
 
       const newUser: User = {
-        id: 123,
         telegramId: ctx.from?.id ?? 1,
         telegramNickname: ctx.from?.username ?? 'Nickname',
         name: ctx.from?.first_name ?? 'Student',
-        role: 'STUDENT',
+        role: UserRole.STUDENT,
       };
 
       await this.usersService.create(newUser);
@@ -51,15 +51,20 @@ export class BotService implements OnModuleInit {
       });
     });
 
-    this.bot.on('message:text').filter((ctx) => ctx.from.id !== Number(process.env.TEAHCER_ID), async (ctx) => {
-      const name = ctx.from?.first_name ?? 'friend';
+    this.bot.on('message:text').filter(
+      (ctx) => ctx.from.id !== Number(process.env.TEAHCER_ID),
+      async (ctx) => {
+        const name = ctx.from?.first_name ?? 'friend';
 
-      await ctx.reply(
-        `Hey <b>${name}</b>!\n<i>How are you doing today? 😁</i>`, {
-          parse_mode: 'HTML',
-          reply_markup: studentsKeyboard,
-        });
-    });
+        await ctx.reply(
+          `Hey <b>${name}</b>!\n<i>How are you doing today? 😁</i>`,
+          {
+            parse_mode: 'HTML',
+            reply_markup: studentsKeyboard,
+          },
+        );
+      },
+    );
 
     const teachersKeyboard = new InlineKeyboard()
       .text('👶 My students', 'show-students')
@@ -67,17 +72,20 @@ export class BotService implements OnModuleInit {
       .text('➕ Add homework', 'add')
       .text('📝 Review homework', 'review');
 
-    const backKeyboard = new InlineKeyboard()
-      .text('⬅️ Back', 'go-back');
+    const backKeyboard = new InlineKeyboard().text('⬅️ Back', 'go-back');
 
-
-    this.bot.on('message').filter((ctx) => ctx.from.id === Number(process.env.TEAHCER_ID), async (ctx) => {
-      await ctx.reply(
-        `Hey, <b>Teacher</b>!\n<i>What's you up for today?</i>`, {
-          parse_mode: 'HTML',
-          reply_markup: teachersKeyboard,
-        });
-    });
+    this.bot.on('message').filter(
+      (ctx) => ctx.from.id === Number(process.env.TEAHCER_ID),
+      async (ctx) => {
+        await ctx.reply(
+          `Hey, <b>Teacher</b>!\n<i>What's you up for today?</i>`,
+          {
+            parse_mode: 'HTML',
+            reply_markup: teachersKeyboard,
+          },
+        );
+      },
+    );
 
     this.bot.callbackQuery('show-students', async (ctx) => {
       const showStudentsKeyboard = new InlineKeyboard()
@@ -105,7 +113,6 @@ export class BotService implements OnModuleInit {
 
       await ctx.answerCallbackQuery();
     });
-
 
     this.bot.callbackQuery('add', async (ctx) => {
       const showStudentsKeyboard = new InlineKeyboard()
@@ -143,11 +150,13 @@ export class BotService implements OnModuleInit {
     });
 
     this.bot.callbackQuery('go-back', async (ctx) => {
-
-      await ctx.editMessageText(`Hey, <b>Teacher</b>!\n<i>What's you up for today?</i>`, {
-        parse_mode: 'HTML',
-        reply_markup: teachersKeyboard,
-      });
+      await ctx.editMessageText(
+        `Hey, <b>Teacher</b>!\n<i>What's you up for today?</i>`,
+        {
+          parse_mode: 'HTML',
+          reply_markup: teachersKeyboard,
+        },
+      );
 
       await ctx.answerCallbackQuery();
     });
@@ -165,7 +174,6 @@ export class BotService implements OnModuleInit {
       } else {
         console.error(`Unknown error: ${e}`);
       }
-
     });
 
     await this.bot.start();

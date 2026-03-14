@@ -1,7 +1,8 @@
-import { User, UserRole } from '../../user/user.entity';
+import { UserRole } from '../../modules/user/entities/user.entity';
 import { CommandContext, Context, InlineKeyboard } from 'grammy';
 import { createUser, getUserById } from '../controllers';
-import { UsersService } from '../../user/user.service';
+import { UsersService } from '../../modules/user/user.service';
+import { CreateUserDto } from '../../modules/user/dto/create-user.dto';
 
 export const start = async (
   ctx: CommandContext<Context>,
@@ -24,7 +25,7 @@ export const start = async (
       reply_markup: menuKeyboard,
     });
   } else {
-    const newUser: User = {
+    const newUser: CreateUserDto = {
       telegramId: id,
       telegramNickname: username ?? 'Nickname',
       name: first_name ?? 'Student',

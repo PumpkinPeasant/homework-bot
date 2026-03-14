@@ -1,6 +1,6 @@
 import console from 'node:console';
-import { HomeworkService } from '../../user/homework.service';
-import { Homework } from '../../user/homework.entity';
+import { HomeworkService } from '../../modules/homework/homework.service';
+import { Homework } from '../../modules/homework/entities/homework.entity';
 
 export const createHomework = async (
   homeworkData: Homework,

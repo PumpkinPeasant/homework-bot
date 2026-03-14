@@ -1,6 +1,7 @@
 import console from 'node:console';
 import { User } from '../../user/user.entity';
 import { UsersService } from '../../user/user.service';
+import { UsersService } from '../../modules/user/user.service';
 
 export const getAllUsers = async (userService: UsersService) => {
   try {
@@ -18,7 +19,10 @@ export const getUserById = async (id: number, userService: UsersService) => {
   }
 };
 
-export const createUser = async (userData: User, userService: UsersService) => {
+export const createUser = async (
+  userData: CreateUserDto,
+  userService: UsersService,
+) => {
   try {
     return await userService.create(userData);
   } catch (error) {

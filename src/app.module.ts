@@ -1,13 +1,13 @@
 import 'dotenv/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user.entity';
-import { UsersController } from './user/user.controller';
-import { UsersService } from './user/user.service';
+import { User } from './modules/user/entities/user.entity';
+import { UsersController } from './modules/user/user.controller';
+import { UsersService } from './modules/user/user.service';
 import { BotService } from './bot/bot.service';
-import { HomeworkService } from './user/homework.service';
-import { Homework } from './user/homework.entity';
-import { HomeworkController } from './user/homework.controller';
+import { HomeworkService } from './modules/homework/homework.service';
+import { Homework } from './modules/homework/entities/homework.entity';
+import { HomeworkController } from './modules/homework/homework.controller';
 
 @Module({
   imports: [

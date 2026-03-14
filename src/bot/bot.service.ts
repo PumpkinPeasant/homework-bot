@@ -10,11 +10,11 @@ import {
 } from 'grammy';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as console from 'node:console';
-import { UsersService } from '../user/user.service';
+import { UsersService } from '../modules/user/user.service';
 import { hydrate } from '@grammyjs/hydrate';
 import { start } from './commands';
 import { createHomework, getAllUsers, getUserById } from './controllers';
-import { HomeworkService } from '../user/homework.service';
+import { HomeworkService } from '../modules/homework/homework.service';
 
 enum SessionState {
   IDLE,

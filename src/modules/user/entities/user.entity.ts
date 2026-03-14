@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryColumn, OneToMany } from 'typeorm';
-import { Homework } from './homework.entity';
+import { Homework } from '../../homework/entities/homework.entity';
 
 export enum UserRole {
   TEACHER,
@@ -25,11 +25,11 @@ export class User {
   role: UserRole;
 
   @OneToMany(() => Homework, (homework) => homework.user)
-  homeworks?: Homework[];
+  homeworks: Homework[];
 
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt?: Date;
+  createdAt: Date;
 }

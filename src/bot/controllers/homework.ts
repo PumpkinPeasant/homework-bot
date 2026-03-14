@@ -12,3 +12,11 @@ export const createHomework = async (
     console.error(`Error while creating homework:`, error);
   }
 };
+
+export const findAllDone = async (homeworkService: HomeworkService) => {
+  try {
+    return await homeworkService.findAllDone();
+  } catch (error) {
+    console.error(`Error while finding homework:`, error);
+  }
+};

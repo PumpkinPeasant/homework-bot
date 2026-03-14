@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Homework } from './entities/homework.entity';
+import { Homework, HomeworkStatus } from './entities/homework.entity';
 
 @Injectable()
 export class HomeworkService {
@@ -16,5 +16,20 @@ export class HomeworkService {
 
   async delete(id: number): Promise<void> {
     await this.homeworkRepository.delete(id);
+  }
+
+  async findAll(): Promise<Homework[]> {
+    return await this.homeworkRepository.find();
+  }
+
+  async findAllDone(): Promise<Homework[]> {
+    return await this.homeworkRepository.find({
+      where: {
+        status: HomeworkStatus.DONE,
+      },
+      relations: {
+        user: true,
+      },
+    });
   }
 }

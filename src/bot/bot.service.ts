@@ -65,7 +65,9 @@ export class BotService implements OnModuleInit {
     );
     addHomework(this.bot, this.usersService, this.homeworkService);
 
-    this.bot.callbackQuery('review', (ctx) => reviewHomeworkCallback(ctx));
+    this.bot.callbackQuery('review', (ctx) =>
+      reviewHomeworkCallback(ctx, this.homeworkService),
+    );
     reviewHomework();
 
     this.bot.callbackQuery('go-back', (ctx) => goBackCallback(ctx));

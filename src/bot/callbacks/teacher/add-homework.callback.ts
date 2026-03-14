@@ -30,7 +30,7 @@ export const addHomeworkCallback = async (
     return;
   }
 
-  await ctx.editMessageText(`There is no one to assign homework for...`, {
+  await ctx.editMessageText(`👀 There is no one to assign homework for...`, {
     reply_markup: backKeyboard,
   });
 };

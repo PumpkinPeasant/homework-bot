@@ -1,7 +1,6 @@
 import console from 'node:console';
-import { User } from '../../user/user.entity';
-import { UsersService } from '../../user/user.service';
 import { UsersService } from '../../modules/user/user.service';
+import { CreateUserDto } from '../../modules/user/dto/create-user.dto';
 
 export const getAllUsers = async (userService: UsersService) => {
   try {

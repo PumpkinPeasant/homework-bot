@@ -3,10 +3,11 @@ import { CommandContext, Context, InlineKeyboard } from 'grammy';
 import { createUser, getUserById } from '../controllers';
 import { UsersService } from '../../user/user.service';
 
-export const start = async (ctx: CommandContext<Context>, userService: UsersService) => {
-
-  const menuKeyboard = new InlineKeyboard()
-    .text('📚 Menu', 'open_menu');
+export const start = async (
+  ctx: CommandContext<Context>,
+  userService: UsersService,
+) => {
+  const menuKeyboard = new InlineKeyboard().text('📚 Menu', 'open_menu');
 
   if (!ctx.from) {
     return ctx.reply('User info is not available');

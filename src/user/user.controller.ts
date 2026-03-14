@@ -1,12 +1,19 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { User } from './user.entity';
 import { UsersService } from './user.service';
 
 @Controller('users')
 export class UsersController {
-
-  constructor(private usersService: UsersService) {
-  }
+  constructor(private usersService: UsersService) {}
 
   @Post()
   async create(@Body() createUserDto: User): Promise<User> {

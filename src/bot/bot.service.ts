@@ -1,5 +1,13 @@
 import 'dotenv/config';
-import { Bot, Context, GrammyError, HttpError, InlineKeyboard, session, SessionFlavor } from 'grammy';
+import {
+  Bot,
+  Context,
+  GrammyError,
+  HttpError,
+  InlineKeyboard,
+  session,
+  SessionFlavor,
+} from 'grammy';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as console from 'node:console';
 import { UsersService } from '../user/user.service';
@@ -7,17 +15,16 @@ import { hydrate } from '@grammyjs/hydrate';
 import { start } from './commands';
 import { createHomework, getAllUsers, getUserById } from './controllers';
 import { HomeworkService } from '../user/homework.service';
-import { User } from '../user/user.entity';
 
 enum SessionState {
   IDLE,
-  SET_HOMEWORK
+  SET_HOMEWORK,
 }
 
 interface CurrentStudent {
-  telegramId: number,
-  name: string,
-  telegramNickname: string
+  telegramId: number;
+  name: string;
+  telegramNickname: string;
 }
 
 interface SessionData {
@@ -30,8 +37,10 @@ type MyContext = Context & SessionFlavor<SessionData>;
 
 @Injectable()
 export class BotService implements OnModuleInit {
-  constructor(private usersService: UsersService, private homeworkService: HomeworkService) {
-  }
+  constructor(
+    private usersService: UsersService,
+    private homeworkService: HomeworkService,
+  ) {}
 
   bot = new Bot<MyContext>(process.env.BOT_TOKEN!);
 
@@ -190,35 +199,35 @@ export class BotService implements OnModuleInit {
       });
     });
 
-    this.bot.on('message:text')
-      .filter((ctx) => ctx.session.state === SessionState.SET_HOMEWORK,
-        async (ctx) => {
+    this.bot.on('message:text').filter(
+      (ctx) => ctx.session.state === SessionState.SET_HOMEWORK,
+      async (ctx) => {
+        const user = ctx.session.currentStudent;
 
-          const user = ctx.session.currentStudent;
+        if (user) {
+          ctx.session.draftHomework = ctx.update.message.text;
 
-          if (user) {
-            ctx.session.draftHomework = ctx.update.message.text;
+          const setHomeworkKeyboard = new InlineKeyboard()
+            .text('↩️ Back', 'go-back')
+            .text(`✅ Send to ${user.name}`, 'send-homework');
 
-            const setHomeworkKeyboard = new InlineKeyboard()
-              .text('↩️ Back', 'go-back')
-              .text(`✅ Send to ${user.name}`, 'send-homework');
-
-            await ctx.reply(`Homework:  \n<blockquote>${ctx.update.message.text}</blockquote>\nis going to be assigned to: 👶 ${user.name} | @${user.telegramNickname}`, {
+          await ctx.reply(
+            `Homework:  \n<blockquote>${ctx.update.message.text}</blockquote>\nis going to be assigned to: 👶 ${user.name} | @${user.telegramNickname}`,
+            {
               parse_mode: 'HTML',
               reply_markup: setHomeworkKeyboard,
-            });
-            return;
-          }
+            },
+          );
+          return;
+        }
 
-          await ctx.reply(`Something went wrong... Try again`, {
-            reply_markup: backKeyboard,
-          });
-
+        await ctx.reply(`Something went wrong... Try again`, {
+          reply_markup: backKeyboard,
         });
-
+      },
+    );
 
     this.bot.callbackQuery('send-homework', async (ctx) => {
-
       const draftHomework = ctx.session.draftHomework;
       const userId = ctx.session.currentStudent?.telegramId;
 
@@ -233,9 +242,12 @@ export class BotService implements OnModuleInit {
 
           await createHomework(homework, this.homeworkService);
 
-          await ctx.editMessageText(`Homework is successfully assigned to: 👶 ${user.name} | @${user.telegramNickname}\nWhat are we going to do next, Mr. Teacher ? 😎`, {
-            reply_markup: teachersKeyboard,
-          });
+          await ctx.editMessageText(
+            `Homework is successfully assigned to: 👶 ${user.name} | @${user.telegramNickname}\nWhat are we going to do next, Mr. Teacher ? 😎`,
+            {
+              reply_markup: teachersKeyboard,
+            },
+          );
 
           ctx.session.draftHomework = null;
           ctx.session.currentStudent = null;
@@ -280,7 +292,7 @@ export class BotService implements OnModuleInit {
       } else if (e instanceof HttpError) {
         console.error(`Could not connect Telegram, ${e}`);
       } else {
-        console.error(`Unknown error: ${e}`);
+        console.error(`Unknown error: ${String(e)}`);
       }
     });
 

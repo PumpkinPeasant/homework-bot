@@ -2,7 +2,6 @@ import console from 'node:console';
 import { User } from '../../user/user.entity';
 import { UsersService } from '../../user/user.service';
 
-
 export const getAllUsers = async (userService: UsersService) => {
   try {
     return await userService.findAll();
@@ -26,4 +25,3 @@ export const createUser = async (userData: User, userService: UsersService) => {
     console.error(`Error while creating new user:`, error);
   }
 };
-
